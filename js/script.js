@@ -1664,7 +1664,10 @@ function showCheckoutAddressModal() {
             ${addr.instructions ? '<p class="checkout-address-extra">' + addr.instructions + '</p>' : ''}
             ${cityParts.length ? '<p class="checkout-address-city">' + cityParts.join(', ') + '</p>' : ''}
           </div>
-          <i class="fas fa-chevron-right checkout-saved-address-arrow"></i>
+          <div class="checkout-saved-address-actions">
+            <button class="checkout-address-edit-btn" onclick="editCheckoutAddress(${addr.id}, event)"><i class="fas fa-pen"></i></button>
+            <i class="fas fa-chevron-right checkout-saved-address-arrow"></i>
+          </div>
         </div>
       `;
     }).join('');
@@ -1708,6 +1711,7 @@ function selectCheckoutAddress(id) {
 function cancelCheckoutAddress() {
   const modal = document.getElementById('addressModal');
   delete modal.dataset.editId;
+  modal.querySelector('.address-modal-header h3').textContent = 'Nueva dirección';
   modal.style.display = 'none';
   const saved = document.getElementById('checkoutAddressSaved');
   const empty = document.getElementById('checkoutAddressEmpty');
@@ -1730,6 +1734,41 @@ function cancelCheckoutAddress() {
 }
 
 let selectedAddressType = 'Casa';
+
+function editCheckoutAddress(id, event) {
+  if (event) event.stopPropagation();
+  if (!currentUser) return;
+  const userId = currentUser.id || currentUser.email;
+  const key = 'userAddresses_' + userId;
+  const addresses = JSON.parse(localStorage.getItem(key) || '[]');
+  const addr = addresses.find(a => a.id === id);
+  if (!addr) return;
+
+  // Fill form
+  document.getElementById('checkoutAddress').value = addr.address || '';
+  document.getElementById('checkoutAddressInstructions').value = addr.instructions || '';
+  document.getElementById('checkoutLocality').value = addr.locality || '';
+  document.getElementById('checkoutNeighborhood').value = addr.neighborhood || '';
+  document.getElementById('checkoutCity').value = addr.city || '';
+  document.getElementById('checkoutZip').value = addr.zip || '';
+
+  // Set type
+  selectedAddressType = addr.type || 'Casa';
+  document.querySelectorAll('.address-type-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.trim().includes(selectedAddressType));
+  });
+
+  // Set edit mode
+  const modal = document.getElementById('addressModal');
+  modal.dataset.editId = id;
+  modal.querySelector('.address-modal-header h3').textContent = 'Editar dirección';
+
+  // Hide selection modal, show form
+  document.getElementById('addressSelectModal').style.display = 'none';
+  document.getElementById('checkoutAddressEmpty').style.display = 'none';
+  document.getElementById('checkoutAddressSaved').style.display = 'none';
+  modal.style.display = 'flex';
+}
 
 function selectAddressType(btn, type) {
   document.querySelectorAll('.address-type-btn').forEach(b => b.classList.remove('active'));

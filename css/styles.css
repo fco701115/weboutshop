@@ -2373,6 +2373,27 @@ button {
   gap: 4px;
 }
 
+.checkout-saved-address-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.checkout-address-edit-btn {
+  background: none;
+  border: none;
+  color: var(--primary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+  transition: background var(--transition), color var(--transition);
+}
+.checkout-address-edit-btn:hover {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
 .checkout-saved-address-arrow {
   color: var(--text-light);
   font-size: 0.8rem;
