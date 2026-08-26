@@ -2397,15 +2397,23 @@ function renderUserOrders() {
 
   const statusLabels = {
     'Pendiente': 'En preparación',
+    'pending': 'En preparación',
     'Enviado': 'Enviado',
+    'shipped': 'Enviado',
     'Completado': 'Completado',
-    'Cancelado': 'Cancelado'
+    'completed': 'Completado',
+    'Cancelado': 'Cancelado',
+    'cancelled': 'Cancelado'
   };
   const statusColors = {
     'Pendiente': '#e67e22',
+    'pending': '#e67e22',
     'Enviado': '#3498db',
+    'shipped': '#3498db',
     'Completado': '#27ae60',
-    'Cancelado': '#e74c3c'
+    'completed': '#27ae60',
+    'Cancelado': '#e74c3c',
+    'cancelled': '#e74c3c'
   };
 
   container.innerHTML = '<div class="user-orders-header"><h2>Mis pedidos <span class="user-orders-count">(' + orders.length + ')</span></h2></div>' +
@@ -2448,17 +2456,25 @@ function showUserOrderDetail(orderId) {
 
   const statusLabels = {
     'Pendiente': 'Pendiente',
+    'pending': 'Pendiente',
     'En preparación': 'En preparación',
     'Enviado': 'Enviado',
+    'shipped': 'Enviado',
     'Completado': 'Completado',
-    'Cancelado': 'Cancelado'
+    'completed': 'Completado',
+    'Cancelado': 'Cancelado',
+    'cancelled': 'Cancelado'
   };
   const statusColors = {
     'Pendiente': '#e67e22',
+    'pending': '#e67e22',
     'En preparación': '#e67e22',
     'Enviado': '#3498db',
+    'shipped': '#3498db',
     'Completado': '#27ae60',
-    'Cancelado': '#e74c3c'
+    'completed': '#27ae60',
+    'Cancelado': '#e74c3c',
+    'cancelled': '#e74c3c'
   };
   const status = order.status || 'Pendiente';
   const displayStatus = statusLabels[status] || status;
