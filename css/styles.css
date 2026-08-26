@@ -3555,7 +3555,7 @@ button {
   }
 
   .address-modal-body {
-    padding: 14px 16px;
+    padding: 12px;
     max-height: 60vh;
     overflow-y: auto;
   }
