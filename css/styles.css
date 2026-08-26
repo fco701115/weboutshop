@@ -2933,7 +2933,8 @@ button {
   .header-inner {
     flex-wrap: wrap;
     height: 60px;
-    padding: 10px 10px 10px 5px;
+    width: 360px;
+    padding: 10px 5px;
   }
 
   .header {
