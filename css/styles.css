@@ -4197,6 +4197,18 @@ button {
   .user-panel-stats {
     grid-template-columns: 1fr;
   }
+
+  .user-order-products-header,
+  .user-order-products-row {
+    grid-template-columns: 1fr 50px 70px 70px;
+    font-size: 0.75rem;
+  }
+
+  .uop-product-img,
+  .uop-product-img-placeholder {
+    width: 32px;
+    height: 32px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -5439,28 +5451,63 @@ button {
 .user-order-detail-header h3 {
   margin: 0;
 }
-.user-order-detail-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+
+
+/* ========== USER ORDER PRODUCTS TABLE ========== */
+.user-order-products-table {
+  width: 100%;
+  margin-bottom: 12px;
+}
+.user-order-products-header {
+  display: grid;
+  grid-template-columns: 1fr 60px 90px 90px;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--border);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+.user-order-products-row {
+  display: grid;
+  grid-template-columns: 1fr 60px 90px 90px;
+  gap: 8px;
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
+  align-items: center;
+  font-size: 0.88rem;
 }
-.user-order-detail-item img {
-  width: 50px;
-  height: 50px;
+.uop-col-producto {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.uop-col-cant,
+.uop-col-precision,
+.uop-col-subtotal {
+  text-align: center;
+}
+.uop-product-img {
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius);
   object-fit: cover;
+  flex-shrink: 0;
 }
-.user-order-detail-item-img-placeholder {
-  width: 50px;
-  height: 50px;
+.uop-product-img-placeholder {
+  width: 40px;
+  height: 40px;
   border-radius: var(--radius);
   background: var(--bg);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--text-light);
+  flex-shrink: 0;
+}
+.uop-product-name {
+  font-weight: 600;
 }
 
 /* ========== ORDER DETAIL MODAL ========== */

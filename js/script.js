@@ -2487,13 +2487,27 @@ function showUserOrderDetail(orderId) {
     '<h4 style="margin-bottom:8px">Dirección de envío</h4>' +
     '<div class="order-detail-address-box">' + addressHTML + '</div>' +
     '<h4 style="margin-bottom:8px">Productos</h4>' +
-    items.map(item => {
-      const img = item.image || (() => { const p = products.find(p => p.id === item.id); return p ? p.image : ''; })();
-      return '<div class="user-order-detail-item">' +
-        (img ? '<img src="' + img + '" alt="">' : '<div class="user-order-detail-item-img-placeholder"><i class="fas fa-box"></i></div>') +
-        '<div><p style="font-weight:600">' + item.name + '</p><p style="color:var(--text-light);font-size:0.85rem">x' + item.qty + ' - $' + parseFloat(item.price).toLocaleString('es-AR', {minimumFractionDigits:2}) + '</p></div>' +
-      '</div>';
-    }).join('') +
+    '<div class="user-order-products-table">' +
+      '<div class="user-order-products-header">' +
+        '<span class="uop-col-producto">PRODUCTO</span>' +
+        '<span class="uop-col-cant">CANT.</span>' +
+        '<span class="uop-col-precio">PRECIO</span>' +
+        '<span class="uop-col-subtotal">SUBTOTAL</span>' +
+      '</div>' +
+      items.map(item => {
+        const img = item.image || (() => { const p = products.find(p => p.id === item.id); return p ? p.image : ''; })();
+        const subtotal = parseFloat(item.price) * item.qty;
+        return '<div class="user-order-products-row">' +
+          '<span class="uop-col-producto">' +
+            (img ? '<img src="' + img + '" alt="" class="uop-product-img">' : '<span class="uop-product-img-placeholder"><i class="fas fa-box"></i></span>') +
+            '<span class="uop-product-name">' + item.name + '</span>' +
+          '</span>' +
+          '<span class="uop-col-cant">' + item.qty + '</span>' +
+          '<span class="uop-col-precision">$' + parseFloat(item.price).toLocaleString('es-AR', {minimumFractionDigits:2}) + '</span>' +
+          '<span class="uop-col-subtotal">$' + subtotal.toLocaleString('es-AR', {minimumFractionDigits:2}) + '</span>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
     '<div style="border-top:1px solid var(--border);padding-top:12px;margin-top:12px;display:flex;justify-content:space-between;font-weight:700">' +
       '<span>Total</span><span>$' + parseFloat(order.total).toLocaleString('es-AR', {minimumFractionDigits:2}) + '</span>' +
     '</div>';
