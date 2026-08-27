@@ -1537,6 +1537,9 @@ function loadFirstCheckoutAddress() {
 
   if (addresses.length > 0) {
     selectCheckoutAddress(addresses[0].id);
+  } else {
+    document.getElementById('checkoutAddressEmpty').style.display = 'block';
+    document.getElementById('checkoutAddressSaved').style.display = 'none';
   }
 }
 
@@ -3130,6 +3133,24 @@ async function deleteProduct(id) {
   loadAdminProducts();
 }
 
+function getAdminStatusLabel(status) {
+  const labels = {
+    'Pendiente': 'Pendiente', 'pending': 'Pendiente',
+    'Enviado': 'Enviado', 'shipped': 'Enviado',
+    'Completado': 'Completado', 'completed': 'Completado',
+    'Cancelado': 'Cancelado', 'cancelled': 'Cancelado'
+  };
+  return labels[status] || status;
+}
+
+function normalizeStatus(status) {
+  const map = {
+    'Pendiente': 'pending', 'Enviado': 'shipped',
+    'Completado': 'completed', 'Cancelado': 'cancelled'
+  };
+  return map[status] || status;
+}
+
 async function loadAdminOrders() {
   const orders = await apiGet('/orders');
   const tbody = document.getElementById('adminOrdersTable');
@@ -3141,7 +3162,8 @@ async function loadAdminOrders() {
   }
   noOrders.style.display = 'none';
   tbody.innerHTML = orders.map(o => {
-    const status = o.status || 'Pendiente';
+    const status = normalizeStatus(o.status || 'pending');
+    const label = getAdminStatusLabel(status);
     return `
     <tr>
       <td><strong>#ORD-${String(o.id).padStart(3, '0')}</strong></td>
@@ -3150,10 +3172,10 @@ async function loadAdminOrders() {
       <td>$${parseFloat(o.total).toLocaleString('es-AR', {minimumFractionDigits:2})}</td>
       <td>
         <select class="order-status-select status-${status}" onchange="updateOrderStatusDirect(${o.id}, this.value); updateStatusColor(this)">
-          <option value="Pendiente" ${status === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-          <option value="Enviado" ${status === 'Enviado' ? 'selected' : ''}>Enviado</option>
-          <option value="Completado" ${status === 'Completado' ? 'selected' : ''}>Completado</option>
-          <option value="Cancelado" ${status === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+          <option value="pending" ${status === 'pending' ? 'selected' : ''}>Pendiente</option>
+          <option value="shipped" ${status === 'shipped' ? 'selected' : ''}>Enviado</option>
+          <option value="completed" ${status === 'completed' ? 'selected' : ''}>Completado</option>
+          <option value="cancelled" ${status === 'cancelled' ? 'selected' : ''}>Cancelado</option>
         </select>
       </td>
       <td>
@@ -3164,7 +3186,7 @@ async function loadAdminOrders() {
 }
 
 function updateStatusColor(select) {
-  const val = select.value;
+  const val = normalizeStatus(select.value);
   select.className = 'order-status-select status-' + val;
 }
 
@@ -3178,7 +3200,7 @@ function showOrderDetail(order) {
 
   document.getElementById('orderDetailId').textContent = '#ORD-' + String(order.id).padStart(3, '0');
   document.getElementById('orderDetailDate').textContent = new Date(order.created_at).toLocaleDateString('es-AR');
-  const status = order.status || 'Pendiente';
+  const status = normalizeStatus(order.status || 'pending');
   const statusSelect = document.getElementById('orderDetailStatus');
   statusSelect.value = status;
   statusSelect.className = 'order-status-select status-' + status;

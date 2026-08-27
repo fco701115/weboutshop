@@ -3677,6 +3677,33 @@ button {
     width: calc(100% - 10px);
     margin: 3vh auto;
   }
+
+  .address-modal-body {
+    padding: 10px;
+  }
+
+  .address-modal-body .form-group input,
+  .address-modal-body .form-group select {
+    padding: 9px 10px;
+    font-size: 0.85rem;
+  }
+
+  .address-type-btn {
+    padding: 7px 8px;
+    font-size: 0.78rem;
+    gap: 4px;
+  }
+
+  .address-modal-footer {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .address-btn-cancel,
+  .address-btn-save {
+    width: 100%;
+    text-align: center;
+  }
 }
 .categories-accordion {
   display: flex;
@@ -4041,6 +4068,12 @@ button {
 
 .form-group {
   margin-bottom: 18px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .form-group label {
@@ -5597,25 +5630,29 @@ button {
   appearance: auto;
 }
 
-.status-Pendiente {
+.status-Pendiente,
+.status-pending {
   background: #fff8e1 !important;
   color: #f57f17 !important;
   border-color: #f57f17 !important;
 }
 
-.status-Enviado {
+.status-Enviado,
+.status-shipped {
   background: #e3f2fd !important;
   color: #1565c0 !important;
   border-color: #1565c0 !important;
 }
 
-.status-Completado {
+.status-Completado,
+.status-completed {
   background: #e8f5e9 !important;
   color: #2e7d32 !important;
   border-color: #2e7d32 !important;
 }
 
-.status-Cancelado {
+.status-Cancelado,
+.status-cancelled {
   background: #ffebee !important;
   color: #c62828 !important;
   border-color: #c62828 !important;
