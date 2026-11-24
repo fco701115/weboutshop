@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sofia Boutique - Ropa y Calzado Americano</title>
   <link rel="icon" type="image/png" href="/Logo-Boutique-Sofia-2.png">
-  <link rel="stylesheet" href="/css/styles.css?v=30">
+  <link rel="stylesheet" href="/css/styles.css?v=31">
   <script>
     // Detectar navegador integrado de Facebook / Instagram / Messenger
     if (/FBAN|FBAV|FB_IAB|FB4A|FBMAN|FBIOS|Instagram/i.test(navigator.userAgent)) {
@@ -1326,6 +1326,11 @@
         </div>
       </div>
       <div class="products-grid" id="productsGrid"></div>
+      <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreHomeProducts()">
+          <i class="fas fa-plus"></i> Ver más productos
+        </button>
+      </div>
     </section>
 
     <!-- ¿DÓNDE ESTAMOS? -->
@@ -1811,7 +1816,7 @@
     </div>
   </div>
 
-  <script src="/js/script.js?v=25"></script>
+  <script src="/js/script.js?v=26"></script>
 
   <!-- ActivarServiceWorker -->
   <script>

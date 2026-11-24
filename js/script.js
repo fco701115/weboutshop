@@ -497,13 +497,24 @@ function productCardHtml(p) {
     </div>`;
 }
 
+let homeProductsLimit = 100;
+let lastHomeFilter = 'Todas';
+
 function renderProducts(filter = 'Todas') {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
 
+  // Si cambia el filtro, reiniciamos el límite a 100
+  if (filter !== lastHomeFilter) {
+    homeProductsLimit = 100;
+    lastHomeFilter = filter;
+  }
+
   const filtered = filter === 'Todas' ? [...products] : products.filter(p => p.category === filter);
   // Último producto subido primero (id mayor = más reciente)
   filtered.sort((a, b) => b.id - a.id);
+
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
 
   if (filtered.length === 0) {
     grid.innerHTML = `
@@ -513,10 +524,45 @@ function renderProducts(filter = 'Todas') {
         <p>No hay productos en esta categoría</p>
       </div>
     `;
+    if (loadMoreContainer) loadMoreContainer.style.display = 'none';
     return;
   }
 
-  grid.innerHTML = filtered.map(p => productCardHtml(p)).join('');
+  const visibleProducts = filtered.slice(0, homeProductsLimit);
+  grid.innerHTML = visibleProducts.map(p => productCardHtml(p)).join('');
+
+  if (loadMoreContainer) {
+    if (homeProductsLimit < filtered.length) {
+      loadMoreContainer.style.display = 'flex';
+    } else {
+      loadMoreContainer.style.display = 'none';
+    }
+  }
+}
+
+function loadMoreHomeProducts() {
+  const grid = document.getElementById('productsGrid');
+  const loadMoreContainer = document.getElementById('loadMoreContainer');
+  if (!grid) return;
+
+  const filtered = lastHomeFilter === 'Todas' ? [...products] : products.filter(p => p.category === lastHomeFilter);
+  filtered.sort((a, b) => b.id - a.id);
+
+  const start = homeProductsLimit;
+  homeProductsLimit += 100;
+  const nextBatch = filtered.slice(start, homeProductsLimit);
+
+  if (nextBatch.length > 0) {
+    grid.insertAdjacentHTML('beforeend', nextBatch.map(p => productCardHtml(p)).join(''));
+  }
+
+  if (loadMoreContainer) {
+    if (homeProductsLimit < filtered.length) {
+      loadMoreContainer.style.display = 'flex';
+    } else {
+      loadMoreContainer.style.display = 'none';
+    }
+  }
 }
 
 function renderCategoryProducts(category) {
