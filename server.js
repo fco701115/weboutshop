@@ -336,6 +336,30 @@ async function autoMigrate() {
     // Fix status default
     await pool.query("ALTER TABLE orders ALTER COLUMN status SET DEFAULT 'Pendiente'");
     await pool.query("UPDATE orders SET status = 'Pendiente' WHERE status = 'pending'");
+
+    // Reasignación consecutiva de IDs solicitada: ID 205 pasa a 204, ID 207 pasa a 205
+    try {
+      const check205 = await pool.query('SELECT id FROM products WHERE id = 205');
+      const check207 = await pool.query('SELECT id FROM products WHERE id = 207');
+      if (check205.rows.length > 0 || check207.rows.length > 0) {
+        await pool.query('BEGIN');
+        const check204 = await pool.query('SELECT id FROM products WHERE id = 204');
+        if (check204.rows.length === 0 && check205.rows.length > 0) {
+          await pool.query('UPDATE products SET id = 204 WHERE id = 205');
+        }
+        const check205Free = await pool.query('SELECT id FROM products WHERE id = 205');
+        if (check205Free.rows.length === 0 && check207.rows.length > 0) {
+          await pool.query('UPDATE products SET id = 205 WHERE id = 207');
+        }
+        await pool.query("SELECT setval('products_id_seq', (SELECT COALESCE(MAX(id), 1) FROM products))");
+        await pool.query('COMMIT');
+        console.log('Reasignación consecutiva de IDs completada: 205->204 y 207->205.');
+      }
+    } catch (migErr) {
+      await pool.query('ROLLBACK');
+      console.error('Error al renumerar IDs 205/207:', migErr.message);
+    }
+
     console.log('Auto-migración de orders, products y users completada');
   } catch (err) {
     console.error('Error en auto-migración:', err.message);
@@ -598,6 +622,31 @@ app.delete('/api/products/:id', async (req, res) => {
   } catch (err) {
     console.error('Error deleting product:', err);
     res.status(500).json({ error: 'Error al eliminar producto' });
+  }
+});
+
+// POST resequence product IDs (205 -> 204, 207 -> 205)
+app.post('/api/products/resequence-ids', async (req, res) => {
+  try {
+    await pool.query('BEGIN');
+    const check204 = await pool.query('SELECT id FROM products WHERE id = 204');
+    const check205 = await pool.query('SELECT id FROM products WHERE id = 205');
+    if (check204.rows.length === 0 && check205.rows.length > 0) {
+      await pool.query('UPDATE products SET id = 204 WHERE id = 205');
+    }
+    const check205Free = await pool.query('SELECT id FROM products WHERE id = 205');
+    const check207 = await pool.query('SELECT id FROM products WHERE id = 207');
+    if (check205Free.rows.length === 0 && check207.rows.length > 0) {
+      await pool.query('UPDATE products SET id = 205 WHERE id = 207');
+    }
+    await pool.query("SELECT setval('products_id_seq', (SELECT COALESCE(MAX(id), 1) FROM products))");
+    await pool.query('COMMIT');
+    const current = await pool.query('SELECT id, name FROM products WHERE id >= 200 ORDER BY id ASC');
+    res.json({ success: true, message: 'IDs renumerados correctamente', products: current.rows });
+  } catch (err) {
+    await pool.query('ROLLBACK');
+    console.error('Error resequencing ids:', err);
+    res.status(500).json({ error: 'Error al renumerar IDs' });
   }
 });
 
